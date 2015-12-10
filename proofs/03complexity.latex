@@ -4,9 +4,12 @@
 \begin{document}
 \section{Vectors}
 
+
 \subsection{Array-based implementation}
+Additive reallocation is when we reallocate the array, increasing its length by a constant $d$ each time we try to \textsc{Insert} and element into an array that is already full.\\
+
 \textsc{Theorem}:
-%textsc is not semantic. what is that, semantically? a mathematical entity.
+%textsc is not semantic. what is that, semantically? a narrative entity.
 Additive reallocation takes $O(n^2)$ time, where $n$ is number of elements added.
 \begin{proof}
 %how do we begin the proof? 
