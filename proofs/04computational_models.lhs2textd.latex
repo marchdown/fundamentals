@@ -1,0 +1,413 @@
+% https://www.youtube.com/watch?v=-4Yp3j_jk8Q
+% % % include lhs2TeX.fmt
+
+\documentclass{article}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\begin{document}
+% which interesting recursively defined f :: Nat → Nat → Nat do I know?
+% gcd, lcm
+% pow, tetration, pentation
+% Ackermann's function
+% 
+\section{gcd}
+\vspace{2ex}
+
+$Init:(x=M)∧(y=N)$
+
+\vspace{8ex}
+$NextState:((x>y)∧(x'=y)∧(y'=x`mod`y))\vspace{4ex}∨((x<y)∧(y'=x)∧(x'=y`mod`x))$
+
+
+\begin{align}
+(\\ 
+ &   & & (&(x>y)&  &∧& &(x'=y)& &∧& &(y'=x`mod`y))&\\
+ & ∨ & & (&(x<y)&  &∧& &(y'=x)& &∧& &(x'=y`mod`x))&)
+\end{align}
+% HWÆT how to render a backtick?
+% why can't I put \smallcaps{OR} inside align environment?
+
+
+\section{TLA\textsuperscript{+} Language}
+% how do I do an upper-index in a section title?
+% \textsuperscript w00t
+\subsection{GCD example specification}
+%
+\begin{align*}
+  \textsc{Constants} && M, &    N & & \\
+  \textsc{Variables} && x, &   y & & \\
+% HWÆT this alignment sucks. how do I make it better?
+\end{align*}
+
+
+\begin{align*}
+  \textit{Init}     & \triangleq &(x=M)& &∧ & &(y=N) \\
+  \textit{Next}     & \triangleq & (    & &( x>y& & &      \\
+                    &            & & ∧ & (x'=y) \\
+                    &            & & ∧ & (y'=x-y) \\
+                    & ∨ &(&&(x<y)&  \\
+                    &&&∧& (y'=x)& \\
+                    &&&∧& (x'=y-x))&)
+\end{align*}
+\subsection{quicksort example}
+What it is: a divide-and-conquer algorithm for sorting an array in place.
+\[
+A[0],...,A[N-1]
+\]
+Uses a procedure $Partition(lo,hi)$.\\
+$Partition$ chooses $pivot$ in $lo...(hi-1)$, permutes $A[lo],...,A[hi]$\\
+to make $A[lo],...,A[pivot]\leq A[pivot+1],...,A[hi]$ \\
+and returns pivot.
+
+\subsubsection{thinking around procedures}
+A procedure differs from a (pure) function in that it has side-effects. Side effect here are crucial.
+We can think of a procedure as a function which take a hidden input, $State$, and returns a hidden output, $State'$. But then the order of execution becomes important. If our procedure is tree-recursive, we have to traverse the whole tree in the correct order to juggle the changing $State$. But there is a formalism for the order of execution, and this is a monad!\\
+N.B.: see if the monad is a minimal formalism, or is there something more abstract that would suffice.\\
+% HWÆT: left-indent and marginalia.
+Now, is order of execution really important here? for example, does it matter whether we sort the lower or the higher half first? No, it does not.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbin{>}\mathbf{instance}\;\Conid{Monad}\;\Conid{State}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}\Varid{return}\mathbin{::}\Varid{a}\to \Conid{State}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}\Varid{return}\;\Varid{a}\mathrel{=}\Conid{State}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}(\bind )\mathbin{::}\Conid{State}\;\Varid{a}\to (\Varid{a}\to \Varid{b})\to \Conid{State}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}(\bind )\;\Varid{a}\;\Varid{f}\mathrel{=}\Varid{return}\mathbin{\$}\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mathbin{\%}\Varid{what}\;\Varid{are}\;\Varid{monadic}\;\Varid{laws}\mathbin{?}{}\<[E]%
+\\
+\>[B]{}\mathbin{\%}\Varid{something}\;\Varid{something}\;\Varid{identity}\;\Varid{something}\;\Varid{something}\;\Varid{associativity}\;\Varid{something}\;\Varid{something}\mathbin{\circ}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mathbin{>}\Varid{qsort}\mathbin{::}\Conid{Ord}\;\Varid{a}\Rightarrow \Conid{State}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\mathbin{>}\Varid{qsort}\;\Varid{as}\mathrel{=}\mathbf{do}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{n}{}\<[12]%
+\>[12]{}\leftarrow \Varid{length}\;\Varid{as}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{pivot}{}\<[12]%
+\>[12]{}\leftarrow \Varid{n}\mathbin{/}\mathrm{2}\mbox{\onelinecomment  floor}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{ls}{}\<[12]%
+\>[12]{}\leftarrow \Varid{take}\;\Varid{n}\;\Varid{as}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{hs}{}\<[12]%
+\>[12]{}\leftarrow \Varid{drop}\;\Varid{n}\;\Varid{as}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{result}\leftarrow \Varid{qsort}\;\Varid{ls}\plus \Varid{qsort}\;\Varid{hs}{}\<[E]%
+\\
+\>[B]{}\mathbin{>}{}\<[5]%
+\>[5]{}\Varid{return}\;\Varid{result}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\section{copy-pasted example of various alignment commands}
+
+\begin{equation}
+\frac{
+    \begin{array}[b]{r}
+      \left( x_1 x_2 \right)\\
+      \times \left( x'_1 x'_2 \right)
+    \end{array}
+  }{
+    \left( y_1y_2y_3y_4 \right)
+  }
+\end{equation}
+
+%requires amsmath
+\[ f(n) =
+  \begin{cases}
+    n/2       & \quad \text{if } n \text{ is even}\\
+    -(n+1)/2  & \quad \text{if } n \text{ is odd}\\
+  \end{cases}
+\]
+
+
+\begin{align}
+ A &=     \left(\int_t XXX       \right.\nonumber\\
+   &\qquad \left.\vphantom{\int_t} YYY \dots \right)
+\end{align}
+
+\end{document}
+
+% HWÆT: remove second-line indentation
+% lookup command to inser a horizonal line or a vertical space
+% how to lay out a bunch of formulas?

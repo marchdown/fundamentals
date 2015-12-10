@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{pf2}
+\begin{document}
+\section{Vectors}
+
+\subsection{Array-based implementation}
+\textsc{Theorem}:
+%textsc is not semantic. what is that, semantically? a mathematical entity.
+Additive reallocation takes $O(n^2)$ time, where $n$ is number of elements added.
+\begin{proof}
+%how do we begin the proof? 
+% either we restate the theorem
+% or we assert some proposition which we would later cite as a reason for theorem's conclusion being true.
+% so...
+  \step{n copies}{We copy each element of the array on each \textsc{Insert}}
+  \begin{proof}
+    \pf On each \textsc{Insert} operation we grow our vector, so we copy the whole array, element by element.~\qed
+% HWÆT what does ~ in ~\qed mean? what is \pf?
+
+  \end{proof}
+  \step{}{On average, length of the array at the time of \textsc{Insert} operation is $\frac{n+1}{2}+k$, where $k$ is length the vector had before we had our way with it.}
+  \begin{proof}
+    \pf For each $i ← [1..n]$, we copy $k+i$ elements on $i-1$st \textsc{Insert} operation. If we pair them up as $(i, n-i)$, we get $n+1$ elements copied per each of $n$ pairs.~\qed
+%that's for the even case only. for the odd case, we pair the middle element with itself.
+
+
+% I am confused about structure of the proof.
+  \end{proof}
+  \qedstep
+\end{proof}
+\qedstep
+\end{document}

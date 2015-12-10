@@ -1,0 +1,112 @@
+% https://www.youtube.com/watch?v=-4Yp3j_jk8Q
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\begin{document}
+% which interesting recursively defined f :: Nat → Nat → Nat do I know?
+% gcd, lcm
+% pow, tetration, pentation
+% Ackermann's function
+% 
+\section{gcd}
+\vspace{2ex}
+
+$Init:(x=M)∧(y=N)$
+
+\vspace{8ex}
+$NextState:((x>y)∧(x'=y)∧(y'=x`mod`y))\vspace{4ex}∨((x<y)∧(y'=x)∧(x'=y`mod`x))$
+
+
+\begin{align}
+(\\ 
+ &   & & (&(x>y)&  &∧& &(x'=y)& &∧& &(y'=x`mod`y))&\\
+ & ∨ & & (&(x<y)&  &∧& &(y'=x)& &∧& &(x'=y`mod`x))&)
+\end{align}
+% HWÆT how to render a backtick?
+% why can't I put \smallcaps{OR} inside align environment?
+
+
+\section{TLA\textsuperscript{+} Language}
+% how do I do an upper-index in a section title?
+% \textsuperscript w00t
+\subsection{GCD example specification}
+%
+\begin{align*}
+  \textsc{Constants} && M, &    N & & \\
+  \textsc{Variables} && x, &   y & & \\
+% HWÆT this alignment sucks. how do I make it better?
+\end{align*}
+
+
+\begin{align*}
+  \textit{Init}     & \triangleq &(x=M)& &∧ & &(y=N) \\
+  \textit{Next}     & \triangleq & (    & &( x>y& & &      \\
+                    &            & & ∧ & (x'=y) \\
+                    &            & & ∧ & (y'=x-y) \\
+                    & ∨ &(&&(x<y)&  \\
+                    &&&∧& (y'=x)& \\
+                    &&&∧& (x'=y-x))&)
+\end{align*}
+\subsection{quicksort example}
+What it is: a divide-and-conquer algorithm for sorting an array in place.
+\[
+A[0],...,A[N-1]
+\]
+Uses a procedure $Partition(lo,hi)$.\\
+$Partition$ chooses $pivot$ in $lo...(hi-1)$, permutes $A[lo],...,A[hi]$\\
+to make $A[lo],...,A[pivot]\leq A[pivot+1],...,A[hi]$ \\
+and returns pivot.
+
+\subsubsection{thinking around procedures}
+A procedure differs from a (pure) function in that it has side-effects. Side effect here are crucial.
+We can think of a procedure as a function which take a hidden input, $State$, and returns a hidden output, $State'$. But then the order of execution becomes important. If our procedure is tree-recursive, we have to traverse the whole tree in the correct order to juggle the changing $State$. But there is a formalism for the order of execution, and this is a monad!\\
+N.B.: see if the monad is a minimal formalism, or is there something more abstract that would suffice.\\
+% HWÆT: left-indent and marginalia.
+Now, is order of execution really important here? for example, does it matter whether we sort the lower or the higher half first? No, it does not.
+
+> qsort :: Ord a => State [a] -> [a]
+> qsort as = do 
+>   n      <- length as
+>   pivot  <- n/2 -- floor
+>   ls     <- take n as
+>   hs     <- drop n as
+>   result <- qsort ls ++ qsort hs
+>   return result
+
+
+
+
+\section{copy-pasted example of various alignment commands}
+
+\begin{equation}
+\frac{
+    \begin{array}[b]{r}
+      \left( x_1 x_2 \right)\\
+      \times \left( x'_1 x'_2 \right)
+    \end{array}
+  }{
+    \left( y_1y_2y_3y_4 \right)
+  }
+\end{equation}
+
+%requires amsmath
+\[ f(n) =
+  \begin{cases}
+    n/2       & \quad \text{if } n \text{ is even}\\
+    -(n+1)/2  & \quad \text{if } n \text{ is odd}\\
+  \end{cases}
+\]
+
+
+\begin{align}
+ A &=     \left(\int_t XXX       \right.\nonumber\\
+   &\qquad \left.\vphantom{\int_t} YYY \dots \right)
+\end{align}
+
+\end{document}
+
+% HWÆT: remove second-line indentation
+% lookup command to inser a horizonal line or a vertical space
+% how to lay out a bunch of formulas?

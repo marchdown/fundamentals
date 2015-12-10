@@ -1,0 +1,119 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{pf2}
+\usepackage{amssymb}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\begin{document}
+
+\section{theorem}
+$f:X→Y$ has inverse iff it is bijective.
+
+\subsection{lemma}
+For two functions $f:X\rightarrow Y, g:Y→X$ whenever $gf=e_X$, then f is injective (into, no one image has more than one pre-image) and g is surjective (onto, all of $Y$ is mapped onto $X$).
+
+%% huh, why is there indentation?
+
+($e_M$ is an identity automorphism on set $M$.)
+
+\subsection{proof of the lemma}
+
+Consider an element $x$ in $X$ such that $g(f(x))=e_X(x)=x$. For any two $x, x' \in X$ if $f(x) = f(x') = y$, then $g(y) = x = x'$, thus $x=x'$.
+
+\vspace{2ex}
+Definition: a function $f:X→Y$ is injective, or into, if $\forall x, x' \in X   : f(x)=f(x') \Rightarrow x=x' $. 
+
+%HWÆT how does it follow that $g$ is surjective?
+
+That is to say, there are no such element of range,$y \in Y$, that has two different pre-images $x, x' \in X: y=f(x)=f(x')$.
+
+\vspace{2ex}
+Definition: a function $g:X→Y$ is surjective, or onto, if $\forall y \in Y \thinspace  | \exists x \in X: g(y)=x$. 
+
+That is to say, all elements of the range have pre-images.
+\subsection{proof of the theorem}
+
+$\textsc{Bijective}(f) \Leftarrow ∃ f^{-1}:$\\
+
+Bijective means that $ ∀ x \in X ∃! y \in Y: f(x)=y$ Since y is unique, we can begin to construct $f^{-1}: Y → X$ with $(y,x)$. There is such a pair of every $x\in X$ and every $x \in Y$ and all such pairs are unique by bijectivity.\\
+
+This is a mess, not a proof.\\
+What do I need to do so that the theorem is properly shown to be true? Unfold the definitions and show that the pieces align accoring to the rules of derivation.
+So.
+
+ $\textsc{Bijective}(f)\triangleq\textsc{Injective}(f)∧\textsc{Surjective}(f)$\\ 
+Expanding further,\\
+ $\textsc{Bijective}(f)= (∀y ∃x: y=f(x))∧(∀x, x': f(x)=f(x')\Rightarrow x=x')$\\ 
+\\
+$ ∃ f^{-1} \Leftarrow \textsc{Bijective}(f):$\\
+\\
+
+So far so good. Now, what does it mean for a function to have inverse?
+It means that the function is one-to-one \textit{and} that it covers the whole range.
+
+Injectivity and surjectivity are not symmetric with respect to domain and range: function is always considered defined on all of the domain, but we specifically call /injective/ those functions for which all of their range is used. Any non-injective function can be narrowed down to the used part of its range to make an injective function. More formally: $∀ f, f:X→Y, ∃ f':X→Y' where Y' =\{y \in Y: ∃x \in X: f(x) = y\}.$
+\\
+
+In contrast, non-surjective functions can't be narrowed... no, wait, they can! their /domain/ can be narrowed so that for any surjective $f : X→Y$ we can construct $f':X'→Y$ where $X'=X\{z \in X, ∃ x \in X, x \neq z, f(x)=f(z)$. Nope that formalization excludes all non-unique pre-images, but I want to retain one. Actually, the formalization works: what remains /is/ a surjective function, a minimal one in a large family. Obviously, we often have additional properties we want our surjective narrowing to have, say, analiticity. This seems to be amenable to formalization via an ordering on $X$, where we simply retain the smallest (or the largest) element, and throw away the rest.
+\\
+
+So surjectivity says something about the \textit{domain}: none of its elements have matching images, the function is one-to-one
+
+Injectivity is a statement about the range: the whole of the range is covered.
+
+When both are true, the function is nicely one-to-one and there are no holes in its range.
+
+\pagebreak{}
+\section{Lamport-style structured proof} 
+% HWÆT: where does the statement of the theorem go? 
+% WOOT! Right before the first step of the proof, with title in bold. 
+\textsc{Theorem}: When a composition of two functions is an identity, the functions are inverses of each other and are bijective. 
+% Bad style! what are g and f? what is X and id_X?
+% HWÆT: LaTeX, how to manipulate vertical space? Also, how much space should there be? What is the proper typographical reasoning here?
+
+What follows as an attempt to prove the previous statement in line with Leslie Lamport's article "How to write a 21-century proof" using his \texttt{pf2.sty}.
+\\
+It suffices to prove that bijectivity is equivalent to the existence of inverse, and ... Dammit, this is trivial but unclear how to prove.
+
+\begin{proof}
+  \step{theorem}{$\textsc{Bijective}(f) \Leftrightarrow ∃ f^{-1}$}
+  \begin{proof}
+    \step{lemma}{$g \circ f = id_X \Rightarrow \textsc{Injective}(f) ∧ \textsc{Surjective}(g)$}
+    \begin{proof}
+          \step{from id surjectivity}{$g \circ f = id_X \Rightarrow \textsc{Surjective}(g)$}
+          \begin{proof}
+%            \pf by ($g \circ f = id_X \Rightarrow ∀x \in X : x = id_X(x) = (gf)x = g(fx)$) and definition of Surjectivity.~\qed
+            \pf by ($g \circ f = id_X \Rightarrow ∀ x ∃ f(x) \in Y : x = id_X(x) = g \circ f (x) = g(f(x))$) and definition of Surjectivity.~\qed
+% this step may be written out more clearly.
+          \end{proof}
+          \step{from id injectivity}{ $g \circ f = id_X \Rightarrow \textsc{Injective} (f)$}
+          \begin{proof}
+            \pf by definition of Injectivity.~\qed
+          \end{proof}
+          \qedstep
+        \end{proof}
+ % \step{def bijectivity}{$\textsc{Bijective}(f)\triangleq\textsc{Injective}(f)∧\textsc{Surjective}(f)$}
+ %  \pf\Paragraph By definition. ~\qued
+ %  \step{unwind \textit{further}}
+ %  {$\textsc{Bijective}(f) = 
+ %     (∀y ∃x: y=f(x))
+ %    ∧(∀x, x' : f(x)
+ %    =f(x') \Rightarrow x=x')$}
+
+
+\end{proof}
+\end{proof}
+  
+
+% RESEARCH: Zermelo-Frænkel set notation. Should I write  $\forall x \in X$ or what? How do I write "such that"?
+% gripe: make $ insert a pair of $s, similar to various brackets.
+% how to make new emacs commands? I might use one to jump to this commented out section, or even to keep it in a separate buffer.
+% 
+% HWÆT: how to map latex command onto article structure? sections, theorems, lemmas, proofs, do all of these live on the \subsection level, or even below?
+% HWÆT: I need slurping practice. And slurping cheatsheet!
+
+% RESEARCH: how to make latex accept unicode arrows in the input file?
+% on a related note, how do I use Russian (or Ethiopian, for that matter)
+% while retaining English as a document-level language?
+% What's the difference between babel and the other options (polyglossia? what else?)
+
+\end{document}

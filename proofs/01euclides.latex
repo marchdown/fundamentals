@@ -1,0 +1,23 @@
+\documentclass[a4paper,12pt]{article}
+\begin{document}
+
+
+\title{lamport-style proofs}
+\section{Euclides' proof of there being infinitely many prime numbers}
+\subsection{Statement}
+
+Let $P$ be prime numbers. There are infinitely many of them.
+
+
+\subsection{Statement}
+Equivalently, let $P$ be prime numbers. There is no $p \in P$ such that $\forall p' \in P \leq p$.
+
+\subsubsection{Proof}
+Assume there is $p$ as defined above. then $(p \cdot p-1) - 1$ is not divisible by any $p'$, and is greater than $p$, which gives us condradiction, which could only be because the assumption is false, thus, there is no maximum element in $P$.
+
+
+\section{Mersenne's proof that for composite $n\; M_n = 2^n -1$ is composite as well}
+\subsection{proof}
+consider $n = a \cdot b$ and $2^n - 1= ((2^a)^{b-1} \cdot 2^a) - 1$. Then ...
+
+\end{document}
